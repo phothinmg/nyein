@@ -23,14 +23,9 @@
   "license": "Apache-2.0",
   "description": "",
   "dependencies": {
-    "@lwe8/dts": "^0.2.1",
     "@lwe8/tcolor": "^1.0.3",
-    "@types/js-yaml": "^4.0.9",
     "@types/node": "^24.2.1",
     "commander": "^14.0.0",
-    "esbuild": "^0.25.9",
-    "htmlparser2": "^10.0.0",
-    "js-yaml": "^4.1.0",
     "madge": "^8.0.0",
     "tsx": "^4.20.4",
     "typescript": "^5.9.2"
