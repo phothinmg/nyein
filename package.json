@@ -1,16 +1,26 @@
 {
   "name": "nyein",
   "version": "0.1.0",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "bin": {
-    "nyein": "./dist/nyein.js"
+    "nyein": "./lib/nyein.js"
   },
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js"
+    }
+  },
+  "files": [
+    "lib",
+    "LICENSE",
+    "readme.md",
+    "package.json"
+  ],
   "type": "module",
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Pho Thin Mg <phothinmg@disroot.org>",
+  "license": "Apache-2.0",
   "description": "",
   "dependencies": {
     "@lwe8/dts": "^0.2.1",
