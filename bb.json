@@ -1,0 +1,48 @@
+{
+  "type": "Program",
+  "start": 0,
+  "end": 29,
+  "body": [
+    {
+      "type": "VariableDeclaration",
+      "start": 0,
+      "end": 28,
+      "declarations": [
+        {
+          "type": "VariableDeclarator",
+          "start": 4,
+          "end": 27,
+          "id": {
+            "type": "Identifier",
+            "start": 4,
+            "end": 6,
+            "name": "fs"
+          },
+          "init": {
+            "type": "CallExpression",
+            "start": 9,
+            "end": 27,
+            "callee": {
+              "type": "Identifier",
+              "start": 9,
+              "end": 16,
+              "name": "require"
+            },
+            "arguments": [
+              {
+                "type": "Literal",
+                "start": 17,
+                "end": 26,
+                "value": "node:fs",
+                "raw": "\"node:fs\""
+              }
+            ],
+            "optional": false
+          }
+        }
+      ],
+      "kind": "var"
+    }
+  ],
+  "sourceType": "script"
+}

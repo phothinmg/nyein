@@ -1,6 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { existsSync } from "node:fs";
+import { exec } from "child_process";
+//
 export const isObject = (input: any) =>
   typeof input === "object" && !Array.isArray(input) && input !== null;
 export const isPlainObject = (input: any) =>
@@ -34,4 +36,16 @@ export async function forceRemoveDir(dirPath: string) {
     }
   }
   await fs.rmdir(dirPath);
+}
+
+
+function checkTypesInChild(file: string, ts_config?: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    const cmd = ts_config
+      ? `node -e "require('./type_check.js').default(['${file}'], '${ts_config}')"`
+      : `node -e "require('./type_check.js').default(['${file}'])"`;
+    exec(cmd, (error) => {
+      resolve(!error); // true if success, false if error
+    });
+  });
 }

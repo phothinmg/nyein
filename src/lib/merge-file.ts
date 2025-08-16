@@ -1,5 +1,5 @@
 import fs from "node:fs/promises";
-import { wait } from "../helpers.js";
+import { wait } from "./helpers.js";
 /**
  * Removes import statements from the given code string and collects any non-relative imports
  * into the provided npm array.

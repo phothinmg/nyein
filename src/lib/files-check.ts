@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { magenta, yellow, italic } from "../tcolor.js";
-import { wait } from "../helpers.js";
+import { magenta, yellow, italic } from "@lwe8/tcolor";
+import { wait } from "./helpers.js";
 // only support esm
 const js_exts = [".js", ".mjs"];
 const ts_exts = [".ts", ".mts"];
