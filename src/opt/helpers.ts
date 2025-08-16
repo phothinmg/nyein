@@ -38,7 +38,6 @@ export async function forceRemoveDir(dirPath: string) {
   await fs.rmdir(dirPath);
 }
 
-
 function checkTypesInChild(file: string, ts_config?: string): Promise<boolean> {
   return new Promise((resolve) => {
     const cmd = ts_config
@@ -49,3 +48,11 @@ function checkTypesInChild(file: string, ts_config?: string): Promise<boolean> {
     });
   });
 }
+
+export const createOrCleanOutDir = async (dir: string) => {
+  if (!existsSync(dir)) {
+    await fs.mkdir(dir);
+  } else {
+    cleanDir(dir);
+  }
+};

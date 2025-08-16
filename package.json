@@ -4,16 +4,20 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+    "nyein": "./dist/nyein.js"
+  },
   "type": "module",
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@lwe8/tcolor": "^1.0.2",
+    "@lwe8/dts": "^0.2.1",
+    "@lwe8/tcolor": "^1.0.3",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^24.2.1",
-    "acorn": "^8.15.0",
+    "commander": "^14.0.0",
     "esbuild": "^0.25.9",
     "htmlparser2": "^10.0.0",
     "js-yaml": "^4.1.0",
@@ -23,11 +27,5 @@
   },
   "devDependencies": {
     "@types/madge": "^5.0.3"
-  },
-  "nyein": {
-    "exports": {
-      ".": "./.notes/ts/index.ts",
-      "./foo": "./foo/index.ts"
-    }
   }
 }

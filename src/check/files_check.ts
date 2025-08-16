@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { magenta, yellow, italic } from "@lwe8/tcolor";
-import { wait } from "./helpers.js";
+import { wait } from "../opt/helpers.js";
 // only support esm
 const js_exts = [".js", ".mjs"];
 const ts_exts = [".ts", ".mts"];
@@ -76,4 +76,27 @@ const getModuleTypeFromDeps = async (
   return "esm";
 };
 
-export { getModuleTypeFromDeps, checkFileExtension };
+export default async function checkFiles(dag: string[]) {
+  const exts = await checkFileExtension(dag);
+  const moduleType = await getModuleTypeFromDeps(dag);
+  if (exts === "both") {
+    console.warn(
+      italic(
+        magenta(
+          "Both Javascript and Typescript extensions found in dependencies tree, currently unsupported."
+        )
+      )
+    );
+    process.exit(1);
+  }
+  if (moduleType === "commonjs" || moduleType === "mixed") {
+    console.warn(
+      italic(
+        magenta(
+          "Bundler found commonjs in dependencies tree,commonjs is currently unsupported."
+        )
+      )
+    );
+    process.exit(1);
+  }
+}
