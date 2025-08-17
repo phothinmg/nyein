@@ -56,3 +56,21 @@ export const createOrCleanOutDir = async (dir: string) => {
     cleanDir(dir);
   }
 };
+
+/**
+ * Recursively deletes all files and subdirectories in the given directory.
+ * @param dirPath The path to the directory to clean.
+ */
+// export function cleanDirectory(dirPath: string) {
+//   if (!fs.existsSync(dirPath)) return;
+//   for (const entry of fs.readdirSync(dirPath)) {
+//     const entryPath = path.join(dirPath, entry);
+//     const stat = fs.lstatSync(entryPath);
+//     if (stat.isDirectory()) {
+//       cleanDirectory(entryPath);
+//       fs.rmdirSync(entryPath);
+//     } else {
+//       fs.unlinkSync(entryPath);
+//     }
+//   }
+// }

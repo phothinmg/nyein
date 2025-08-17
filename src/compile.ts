@@ -1,10 +1,25 @@
 import fs from "node:fs/promises";
+import { existsSync } from "node:fs";
 import ts from "typescript";
 import path from "node:path";
+import { italic, magenta } from "@lwe8/tcolor";
+//
 import checks from "./check/index.js";
-import bundle from "./bundle.js";
-import { existsSync } from "node:fs";
-import { forceRemoveDir } from "./opt/helpers.js";
+import getConfig from "./config.js";
+import { wait, forceRemoveDir, cleanDir } from "./opt/helpers.js";
+//
+
+const packageJsonFile = path.join(process.cwd(), "package.json");
+
+async function getPackageData() {
+  const packageDataString = await fs.readFile(packageJsonFile, "utf8");
+  const packageData = JSON.parse(packageDataString);
+  const moduleType: string = packageData.type ? packageData.type : "commonjs";
+  return {
+    moduleType,
+    packageData,
+  };
+}
 export interface CompileOptions {
   /**
    * `path/to/entry_file`
@@ -15,47 +30,22 @@ export interface CompileOptions {
    */
   outDir: string;
   module: ts.ModuleKind;
-  moduleResolution: ts.ModuleResolutionKind;
-  /**
-   * Types check and check for duplicate declarations
-   *
-   * @default true
-   */
-  check?: boolean;
-  /**
-   * If `options.check` true , when error exit process or not.
-   *
-   * @default true
-   */
-  exit?: boolean;
   tsConfigPath?: string;
 }
 
-async function compile({
+export default async function compile({
   entry,
   outDir,
   module,
-  moduleResolution,
-  check = true,
-  exit = true,
   tsConfigPath = undefined,
 }: CompileOptions) {
-  const temp_dir = "._nyein";
   const _compilerOptions = checks
     .getCompilerOptions()
-    .getOptions(outDir, module, moduleResolution, tsConfigPath);
+    .forNpmCompile(outDir, module, tsConfigPath);
   if (!_compilerOptions) {
     throw new Error("Error");
   }
-  const _bundle = await bundle({
-    entry: entry,
-    outDir: temp_dir,
-    check,
-    write: true,
-    exit,
-  });
-  const out_dir_to_remove = path.dirname(_bundle.out_file);
-  const files = [_bundle.out_file];
+  const files = [entry];
   const createdFiles: Record<string, string> = {};
   const host = ts.createCompilerHost(_compilerOptions);
   host.writeFile = function (fileName, contents) {
@@ -73,5 +63,4 @@ async function compile({
     }
     await fs.writeFile(outName, content);
   });
-  await forceRemoveDir(out_dir_to_remove);
 }

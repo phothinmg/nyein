@@ -67,23 +67,19 @@ class GetCompilerOptions {
     }
     return _options;
   }
-  getOptions(
-    out_dir: string,
-    _module: ts.ModuleKind,
-    _moduleResolution: ts.ModuleResolutionKind,
-    tsconfig?: string
-  ) {
+  forNpmCompile(out_dir: string, _module: ts.ModuleKind, tsconfig?: string) {
     if (tsconfig) {
       this._customConfigPath = tsconfig;
     }
     //let _options:ts.CompilerOptions = {};
     if (this._getOptions()) {
-      const { outDir, module, moduleResolution, ...rest } =
+      const { outDir, module, moduleResolution, declaration, ...rest } =
         this._getOptions() as ts.CompilerOptions;
       return {
         outDir: out_dir,
         module: _module,
-        moduleResolution: _moduleResolution,
+        moduleResolution: ts.ModuleResolutionKind.Bundler,
+        declaration: true,
         ...rest,
       } as ts.CompilerOptions;
     }

@@ -1,7 +1,18 @@
+import fs from "node:fs/promises";
+import compileNPM from "./src/compile_npm.js";
+import { forceRemoveDir } from "./src/opt/helpers.js";
+import { existsSync } from "node:fs";
+
+if (existsSync("./lib")) {
+  await forceRemoveDir("./lib");
+}
+
+//console.log("./foo".slice(2));
+const jsText = `
 #!/usr/bin/env node
 import { Command } from "commander";
 import { createRequire } from "node:module";
-import { bundle, bundleDts, compileNPM } from "./index.js";
+import { bundle, bundleDts, compileNPM } from "./esm/index.js";
 const require = createRequire(import.meta.url);
 const _package = require("../package.json");
 const program = new Command();
@@ -31,7 +42,7 @@ program
   )
   .option(
     "--notExit [exit]",
-    "If `options.check` true , when error exit process or not",
+    "If options.check true , when error exit process or not",
     true
   )
   .option("-p, --config [tsconfig]", "Custom tsconfig path.", undefined)
@@ -59,7 +70,7 @@ program
   )
   .option(
     "--notExit [exit]",
-    "If `options.check` true , when error exit process or not",
+    "If options.check true , when error exit process or not",
     true
   )
   .option("-p, --config [tsconfig]", "Custom tsconfig path.", undefined)
@@ -76,3 +87,18 @@ program
   });
 
 program.parse();
+
+`;
+const fns = [
+  compileNPM,
+  async function write() {
+    await fs.writeFile("./lib/index.js", jsText.trim());
+  },
+  async function chmod() {
+    await fs.chmod("./lib/index.js", 0o755);
+  },
+];
+
+for await (const fn of fns) {
+  await fn();
+}

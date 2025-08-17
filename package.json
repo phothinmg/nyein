@@ -1,15 +1,14 @@
 {
   "name": "nyein",
   "version": "0.1.0",
-  "scripts": {},
+  "scripts": {
+    "build": "tsx build.ts",
+    "format": "biome format --write src",
+    "lint": "biome check --write src",
+    "check": "biome check src"
+  },
   "bin": {
     "nyein": "./lib/nyein.js"
-  },
-  "exports": {
-    ".": {
-      "types": "./lib/index.d.ts",
-      "import": "./lib/index.js"
-    }
   },
   "files": [
     "lib",
@@ -29,11 +28,21 @@
     "tsx": "^4.20.4"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.2.0",
     "@types/madge": "^5.0.3",
     "@types/node": "^24.3.0",
     "typescript": "^5.9.2"
   },
-  "nyein":{
-    
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/esm/index.d.ts",
+        "default": "./lib/esm/index.js"
+      },
+      "require": {
+        "types": "./lib/commonjs/index.d.cts",
+        "default": "./lib/commonjs/index.cjs"
+      }
+    }
   }
 }

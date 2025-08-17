@@ -43,6 +43,7 @@ export interface BundleOptions {
    */
   compileOptsOrPath?: string | ts.CompilerOptions;
   write?: boolean;
+  timeLog?: boolean;
 }
 
 export default async function bundle({
@@ -52,8 +53,11 @@ export default async function bundle({
   exit = true,
   compileOptsOrPath = undefined,
   write = false,
+  timeLog = true,
 }: BundleOptions) {
-  console.time(green("bundle time"));
+  if (timeLog) {
+    console.time(green("bundle time"));
+  }
   const root = process.cwd();
   const out_dir = path.join(root, outDir);
   const file_name = path.basename(entry);
@@ -94,7 +98,9 @@ export default async function bundle({
     await createOrCleanOutDir(out_dir);
     await wait(1000);
     await fs.writeFile(out_file, finalContent);
-    console.timeEnd(green("bundle time"));
+    if (timeLog) {
+      console.timeEnd(green("bundle time"));
+    }
   }
 
   return {
