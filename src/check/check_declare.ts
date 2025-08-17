@@ -20,7 +20,8 @@ function checkDuplicateDeclarations({
   const funcMap = new Map<string, Set<string>>();
   const classMap = new Map<string, Set<string>>();
   const importMap = new Set<string>();
-  const compilerOptions = getCompilerOptions(compileOptsOrPath).getOptions();
+  const compilerOptions =
+    getCompilerOptions(compileOptsOrPath).getOptionsForCheckVars();
   if (!compilerOptions) {
     throw new Error(
       magenta(

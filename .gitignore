@@ -4,3 +4,4 @@ node_modules
 a.js
 aa.ts 
 dist
+lib

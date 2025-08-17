@@ -24,13 +24,16 @@
   "description": "",
   "dependencies": {
     "@lwe8/tcolor": "^1.0.3",
-    "@types/node": "^24.2.1",
     "commander": "^14.0.0",
     "madge": "^8.0.0",
-    "tsx": "^4.20.4",
-    "typescript": "^5.9.2"
+    "tsx": "^4.20.4"
   },
   "devDependencies": {
-    "@types/madge": "^5.0.3"
+    "@types/madge": "^5.0.3",
+    "@types/node": "^24.3.0",
+    "typescript": "^5.9.2"
+  },
+  "nyein":{
+    
   }
 }

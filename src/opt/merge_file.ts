@@ -36,7 +36,7 @@ function removeExports(code: string): string {
   code = code.replace(/^export\s+(type\s+)?\{[\s\S]*?\};?/gm, "");
   // Remove export or export default followed by const/function/type/interface (keep the declaration)
   code = code.replace(
-    /^export\s+(default\s+)?(const|function|type|interface)\b/gm,
+    /^export\s+(default\s+)?(async|const|function|type|interface)\b/gm,
     "$2"
   );
   // Remove all other export/export default statements (whole line)

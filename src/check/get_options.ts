@@ -67,10 +67,28 @@ class GetCompilerOptions {
     }
     return _options;
   }
-  getOptions(tsconfig?: string): ts.CompilerOptions | undefined {
+  getOptions(
+    out_dir: string,
+    _module: ts.ModuleKind,
+    _moduleResolution: ts.ModuleResolutionKind,
+    tsconfig?: string
+  ) {
     if (tsconfig) {
       this._customConfigPath = tsconfig;
     }
+    //let _options:ts.CompilerOptions = {};
+    if (this._getOptions()) {
+      const { outDir, module, moduleResolution, ...rest } =
+        this._getOptions() as ts.CompilerOptions;
+      return {
+        outDir: out_dir,
+        module: _module,
+        moduleResolution: _moduleResolution,
+        ...rest,
+      } as ts.CompilerOptions;
+    }
+  }
+  getOptionsForCheckVars() {
     return this._getOptions();
   }
 }
