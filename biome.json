@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -19,10 +19,12 @@
       "suspicious": {
         "noExplicitAny": "off",
         "noAssignInExpressions": "off",
-        "noImplicitAnyLet": "off"
+        "noImplicitAnyLet": "off",
+        "useIterableCallbackReturn": "off"
       },
       "correctness": {
-        "noEmptyCharacterClassInRegex": "off"
+        "noEmptyCharacterClassInRegex": "off",
+        "noUnreachable": "off"
       },
       "style": {
         "noNonNullAssertion": "off"

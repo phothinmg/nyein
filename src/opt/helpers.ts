@@ -1,23 +1,23 @@
+import { exec } from "node:child_process";
+import { existsSync } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { existsSync } from "node:fs";
-import { exec } from "child_process";
 //
 export const isObject = (input: any) =>
-  typeof input === "object" && !Array.isArray(input) && input !== null;
+	typeof input === "object" && !Array.isArray(input) && input !== null;
 export const isPlainObject = (input: any) =>
-  isObject(input) && Object.keys(input).length === 0;
+	isObject(input) && Object.keys(input).length === 0;
 export const isPlainArray = (input: any) =>
-  Array.isArray(input) && input.length === 0;
+	Array.isArray(input) && input.length === 0;
 export const wait = (time: number) =>
-  new Promise((resolve) => setTimeout(resolve, time));
+	new Promise((resolve) => setTimeout(resolve, time));
 /**
  * Remove all files in the given directory.
  * @param dir The directory to clean.
  */
 export const cleanDir = async (dir: string) => {
-  const files = await fs.readdir(dir);
-  await Promise.all(files.map((file) => fs.unlink(path.join(dir, file))));
+	const files = await fs.readdir(dir);
+	await Promise.all(files.map((file) => fs.unlink(path.join(dir, file))));
 };
 
 /**
@@ -25,36 +25,39 @@ export const cleanDir = async (dir: string) => {
  * @param {string} dirPath - The path to the directory to remove.
  */
 export async function forceRemoveDir(dirPath: string) {
-  if (!existsSync(dirPath)) return;
-  for (const entry of await fs.readdir(dirPath)) {
-    const fullPath = path.join(dirPath, entry);
-    const stat = await fs.lstat(fullPath);
-    if (stat.isDirectory()) {
-      await forceRemoveDir(fullPath);
-    } else {
-      await fs.unlink(fullPath);
-    }
-  }
-  await fs.rmdir(dirPath);
+	if (!existsSync(dirPath)) return;
+	for (const entry of await fs.readdir(dirPath)) {
+		const fullPath = path.join(dirPath, entry);
+		const stat = await fs.lstat(fullPath);
+		if (stat.isDirectory()) {
+			await forceRemoveDir(fullPath);
+		} else {
+			await fs.unlink(fullPath);
+		}
+	}
+	await fs.rmdir(dirPath);
 }
 
-function checkTypesInChild(file: string, ts_config?: string): Promise<boolean> {
-  return new Promise((resolve) => {
-    const cmd = ts_config
-      ? `node -e "require('./type_check.js').default(['${file}'], '${ts_config}')"`
-      : `node -e "require('./type_check.js').default(['${file}'])"`;
-    exec(cmd, (error) => {
-      resolve(!error); // true if success, false if error
-    });
-  });
+export function checkTypesInChild(
+	file: string,
+	ts_config?: string,
+): Promise<boolean> {
+	return new Promise((resolve) => {
+		const cmd = ts_config
+			? `node -e "require('./type_check.js').default(['${file}'], '${ts_config}')"`
+			: `node -e "require('./type_check.js').default(['${file}'])"`;
+		exec(cmd, (error) => {
+			resolve(!error); // true if success, false if error
+		});
+	});
 }
 
 export const createOrCleanOutDir = async (dir: string) => {
-  if (!existsSync(dir)) {
-    await fs.mkdir(dir);
-  } else {
-    cleanDir(dir);
-  }
+	if (!existsSync(dir)) {
+		await fs.mkdir(dir);
+	} else {
+		cleanDir(dir);
+	}
 };
 
 /**
