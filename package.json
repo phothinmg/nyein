@@ -1,59 +1,59 @@
 {
-	"name": "nyein",
-	"version": "0.1.1",
-	"scripts": {
-		"build": "tsx build.ts",
-		"format": "biome format --write src",
-		"lint": "biome check --write src",
-		"check": "biome check src"
-	},
-	"bin": {
-		"nyein": "./dist/nyein.js"
-	},
-	"files": [
-		"dist",
-		"LICENSE",
-		"readme.md",
-		"package.json"
-	],
-	"type": "module",
-	"keywords": [
-		"typescript",
-		"bundler",
-		"dts"
-	],
-	"author": "Pho Thin Mg <phothinmg@disroot.org>",
-	"license": "Apache-2.0",
-	"description": "The utilities for create small size typescript node package and publish.",
-	"dependencies": {
-		"@lwe8/tcolor": "^1.0.3",
-		"commander": "^14.0.0",
-		"madge": "^8.0.0",
-		"tsx": "^4.20.4"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^2.2.0",
-		"@types/madge": "^5.0.3",
-		"@types/node": "^24.3.0",
-		"husky": "^9.1.7",
-		"typescript": "^5.9.2"
-	},
-	"publishConfig": {
-		"provenance": true,
-		"access": "public"
-	},
-	"repository": {
-		"url": "git+https://github.com/phothinmg/nyein.git",
-		"type": "git"
-	},
-	"bugs": {
-		"url": "https://github.com/phothinmg/nyein/issues"
-	},
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.js",
-			"require": "./dist/index.cjs"
-		}
-	}
+  "name": "nyein",
+  "version": "0.1.1",
+  "scripts": {
+    "build": "tsx build.ts",
+    "format": "biome format --write src",
+    "lint": "biome check --write src",
+    "check": "biome check src"
+  },
+  "bin": {
+    "nyein": "./dist/nyein.js"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "readme.md",
+    "package.json"
+  ],
+  "type": "module",
+  "keywords": [
+    "typescript",
+    "bundler",
+    "dts"
+  ],
+  "author": "Pho Thin Mg <phothinmg@disroot.org>",
+  "license": "Apache-2.0",
+  "description": "The utilities for create small size typescript node package and publish.",
+  "dependencies": {
+    "@lwe8/tcolor": "^1.0.3",
+    "commander": "^14.0.0",
+    "madge": "^8.0.0",
+    "tsx": "^4.20.4"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.0",
+    "@types/madge": "^5.0.3",
+    "@types/node": "^24.3.0",
+    "husky": "^9.1.7",
+    "typescript": "^5.9.2"
+  },
+  "publishConfig": {
+    "provenance": true,
+    "access": "public"
+  },
+  "repository": {
+    "url": "git+https://github.com/phothinmg/nyein.git",
+    "type": "git"
+  },
+  "bugs": {
+    "url": "https://github.com/phothinmg/nyein/issues"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  }
 }
