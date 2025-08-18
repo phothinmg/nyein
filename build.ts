@@ -1,10 +1,10 @@
+import { existsSync } from "node:fs";
 import fs from "node:fs/promises";
 import compileNPM from "./src/compile_npm.js";
 import { forceRemoveDir } from "./src/opt/helpers.js";
-import { existsSync } from "node:fs";
 
 if (existsSync("./lib")) {
-  await forceRemoveDir("./lib");
+	await forceRemoveDir("./lib");
 }
 
 //console.log("./foo".slice(2));
@@ -90,15 +90,15 @@ program.parse();
 
 `;
 const fns = [
-  compileNPM,
-  async function write() {
-    await fs.writeFile("./dist/nyein.js", jsText.trim());
-  },
-  async function chmod() {
-    await fs.chmod("./dist/nyein.js", 0o755);
-  },
+	compileNPM,
+	async function write() {
+		await fs.writeFile("./dist/nyein.js", jsText.trim());
+	},
+	async function chmod() {
+		await fs.chmod("./dist/nyein.js", 0o755);
+	},
 ];
 
 for await (const fn of fns) {
-  await fn();
+	await fn();
 }
