@@ -2,18 +2,29 @@
 <img alt="nyein-logo" src="https://cdn.jsdelivr.net/gh/phothinmg/nyein@main/public/nyein.png" width="200px" height="200px">
 </div>
 
-**_Still under development_**.
+**_Still under development_**
+
+## Content
+
+- [About](#about)
+- [Install](#install)
+- [Use](#use)
+  - [CLI](#cli)
+  - [Bundle](#1-bundle-typescript-files-to-a-single-file)
+  - [Generate bundled dts file](#2-generate-bundled-dts-file)
+  - [Build typescript package](#3-build-typescript-package-and-handle-dual-output-both-esmcommonjs)
+- [Javascript API](#javascript-api)
+- [LICENSE](#license)
 
 ## About
 
-The utilities for create small size typescript node package and publish,focus on my personal requirements.
+The utilities for create small size typescript node package and publish,with Typescript API.
 
 ## Install
 
 ```bash
 npm i -D nyein
 ```
-
 
 ## Use
 
@@ -41,7 +52,7 @@ Commands:
 
 Simply bundle TypeScript files into a single file while generating a dependency tree using the [madge][madge-github] API. All imports and exports, except for exports in the entry file, are removed. Imports from npm packages and Node.js modules appear at the top of the bundled output file. Type checking and duplicate declaration detection are performed during the bundling process.
 
-_*`jsx` and `commonjs` are currently unsupported now.*_
+_*`jsx` and `commonjs` are currently unsupported.*_
 
 #### Example use
 
@@ -57,7 +68,7 @@ Optional options:
 
 ### 2. Generate bundled dts file.
 
-Generate a bundled dts file from a TypeScript file and its dependencies. 
+Generate a bundled dts file from a TypeScript file and its dependencies.
 
 #### Example use
 
@@ -69,8 +80,74 @@ npx nyein dts path/to/entry.ts -o path/to/output/directory
 
 ### 3. Build typescript package and handle dual output both ESM/Commonjs
 
-Build typescript node package  and dual output with single build.
+Build typescript node package and dual output with single build.
+
+Valid config file : `nyein.config.ts` , `nyein.config.js`,`nyein.config.mjs` at the root of project.
+
+**Example Config**
+
+```ts
+import type { NyeinConfig } from "nyein";
+
+const config: NyeinConfig = {
+  npm: {
+    exports: {
+      main: "./src/index.ts",
+      "./foo": "./src/foo.ts",
+    },
+  },
+};
+
+export default config;
+```
+
+Run in terminal:
+
+```bash
+npx nyein npm
+```
+
+OR
+
+In `package.json`
+
+```json
+{
+  "scripts": {
+    "build": "nyein npm"
+  }
+}
+```
+
+This tool manage `exports` field in your package.json like that:
+
+```json
+{
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./foo": {
+      "types": "./dist/foo/foo.d.ts",
+      "import": "./dist/foo/foo.js",
+      "require": "./dist/foo/foo.cjs"
+    }
+  }
+}
+```
+
+## Javascript API
+
+**_Coming Soon_**
+
+
+## License
+
+[Apache-2.0][file-license] © Pho ThinMg
+
 
 <!-- Links Ref -->
-
+[file-license]: LICENSE
 [madge-github]: https://github.com/pahen/madge
