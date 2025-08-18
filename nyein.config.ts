@@ -5,7 +5,6 @@ const config: NyeinConfig = {
     exports: {
       main: "./src/index.ts",
     },
-    outDir: "./lib",
   },
 };
 

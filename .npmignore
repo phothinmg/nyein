@@ -1,32 +1,13 @@
 node_modules
-
-# opts
-a.ts 
-b.ts 
-example.textile 
-.notes
-a.txt
-
-# source
-src 
-
-# Workflows
-.github
-
-# editor
 .vscode
-
-# Build
-docs
-.tshy
-build
-coverage
-documents
-# Others
-
+.github
+src
+a.js
+aa.ts
+public
+biome.json
+build.ts
 Makefile
-mcr.config.cjs
-codecov.config.cjs
+nyein.config.ts
 package-lock.json
-textile-logo.svg
 tsconfig.json

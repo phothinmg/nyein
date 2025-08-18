@@ -8,19 +8,23 @@
     "check": "biome check src"
   },
   "bin": {
-    "nyein": "./lib/nyein.js"
+    "nyein": "./dist/nyein.js"
   },
   "files": [
-    "lib",
+    "dist",
     "LICENSE",
     "readme.md",
     "package.json"
   ],
   "type": "module",
-  "keywords": [],
+  "keywords": [
+    "typescript",
+    "bundler",
+    "dts"
+  ],
   "author": "Pho Thin Mg <phothinmg@disroot.org>",
   "license": "Apache-2.0",
-  "description": "",
+  "description": "The utilities for create small size typescript node package and publish.",
   "dependencies": {
     "@lwe8/tcolor": "^1.0.3",
     "commander": "^14.0.0",
@@ -33,16 +37,22 @@
     "@types/node": "^24.3.0",
     "typescript": "^5.9.2"
   },
+  "publishConfig": {
+    "provenance": true,
+    "access": "public"
+  },
+  "repository": {
+    "url": "git+https://github.com/phothinmg/nyein.git",
+    "type": "git"
+  },
+  "bugs": {
+    "url": "https://github.com/phothinmg/nyein/issues"
+  },
   "exports": {
     ".": {
-      "import": {
-        "types": "./lib/esm/index.d.ts",
-        "default": "./lib/esm/index.js"
-      },
-      "require": {
-        "types": "./lib/commonjs/index.d.cts",
-        "default": "./lib/commonjs/index.cjs"
-      }
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   }
 }

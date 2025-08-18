@@ -73,7 +73,7 @@ class GetCompilerOptions {
 		}
 		return _options;
 	}
-	forNpmCompile(out_dir: string, _module: ts.ModuleKind, tsconfig?: string) {
+	forNpmCompile(out_dir: string, _module: ts.ModuleKind,_declaration:boolean, tsconfig?: string) {
 		if (tsconfig) {
 			this._customConfigPath = tsconfig;
 		}
@@ -85,7 +85,7 @@ class GetCompilerOptions {
 				outDir: out_dir,
 				module: _module,
 				moduleResolution: ts.ModuleResolutionKind.Bundler,
-				declaration: true,
+				declaration: _declaration,
 				...rest,
 			} as ts.CompilerOptions;
 			const __outDir = outDir;

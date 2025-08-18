@@ -12,7 +12,7 @@ const jsText = `
 #!/usr/bin/env node
 import { Command } from "commander";
 import { createRequire } from "node:module";
-import { bundle, bundleDts, compileNPM } from "./esm/index.js";
+import { bundle, bundleDts, compileNPM } from "./index.js";
 const require = createRequire(import.meta.url);
 const _package = require("../package.json");
 const program = new Command();
@@ -92,10 +92,10 @@ program.parse();
 const fns = [
   compileNPM,
   async function write() {
-    await fs.writeFile("./lib/index.js", jsText.trim());
+    await fs.writeFile("./dist/nyein.js", jsText.trim());
   },
   async function chmod() {
-    await fs.chmod("./lib/index.js", 0o755);
+    await fs.chmod("./dist/nyein.js", 0o755);
   },
 ];
 
