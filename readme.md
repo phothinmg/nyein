@@ -1,8 +1,10 @@
 <div align="center">
 <img alt="nyein-logo" src="https://cdn.jsdelivr.net/gh/phothinmg/nyein@main/public/nyein.png" width="200px" height="200px">
+<br />
+<a href="https://biomejs.dev"><img alt="Checked with Biome" src="https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=flat&logo=biome"></a>
 </div>
 
-**_Still under development_**
+
 
 ## Content
 
@@ -19,6 +21,8 @@
 ## About
 
 The utilities for create small size typescript node package and publish,with Typescript API.
+
+**_Still under development_**
 
 ## Install
 
@@ -119,7 +123,7 @@ In `package.json`
 }
 ```
 
-This tool manage `exports` field in your package.json like that:
+This tool manage `exports` field in your `package.json` like that:
 
 ```json
 {
