@@ -147,11 +147,19 @@ This tool manage `exports` field in your `package.json` like that:
 **_Coming Soon_**
 
 
+## Contributing to Nyein
+
+Contributions are welcome for bug fixes, features, documentation, and code quality improvements, see [here][file-contribute] for more detail.
+
+
 ## License
 
-[Apache-2.0][file-license] © Pho ThinMg
+[Apache-2.0][file-license] © [Pho Thin Mg][ptm]
 
 
 <!-- Links Ref -->
 [file-license]: LICENSE
+[file-contribute]: CONTRIBUTING.md
+[ptm]: https://github.com/phothinmg
 [madge-github]: https://github.com/pahen/madge
+
