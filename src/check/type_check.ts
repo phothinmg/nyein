@@ -1,5 +1,4 @@
 //Check TypeScript Files With Immediate Exit
-
 import * as path from "node:path";
 import * as process from "node:process";
 import { italic, magenta } from "@lwe8/tcolor";

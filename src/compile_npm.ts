@@ -168,111 +168,111 @@ async function writePackageJson(_exports: _Exports) {
  * @return {Promise<void>} A Promise that resolves when the compilation is complete.
  */
 async function compileNPM(): Promise<void> {
-	console.info(green("Start compiling to publish npm package."));
-	console.time(green("Compile time"));
-	// nyein config
-	const root = process.cwd();
-	const config = await getConfig();
-	if (!config.npm) {
-		console.error(
-			italic(magenta("To compile npm module `config.npm` required")),
-		);
-		process.exit(1);
-	}
-	if (!config.npm?.exports.main) {
-		console.error(
-			italic(
-				magenta(
-					"To compile npm module `config.npm` and `config.npm.exports.main` required",
-				),
-			),
-		);
-		process.exit(1);
-	}
-	const exportsObj = config.npm.exports;
-	let out_dir = config.npm?.outDir ?? "dist";
-	if (out_dir.startsWith("./")) {
-		out_dir = out_dir.slice(2).trim();
-	}
-	let tsconfig_path = config.npm?.tsconfig ?? undefined;
-	if (tsconfig_path) {
-		tsconfig_path = path.join(root, tsconfig_path);
-	}
-	const exportKeys = Object.keys(exportsObj);
-	// bundle
-	const temp_dir = "._nyein";
-	let outDir = "";
-	let path_to_remove = "";
-	const _exports: _Exports = {};
-	for await (const key of exportKeys) {
-		const dtsFiles: string[] = [];
-		const cjsOutFiles: string[] = [];
-		const esmOutFiles: string[] = [];
-		const _entry = exportsObj[key as any];
-		if (key === "main") {
-			outDir = path.join(root, out_dir);
-		} else {
-			outDir = path.join(root, out_dir, key);
-		}
-		if (existsSync(outDir)) {
-			await cleanDir(outDir);
-			await wait(500);
-		}
-		const _bundle = await bundle({
-			entry: _entry,
-			outDir: temp_dir,
-			check: true,
-			exit: true,
-			write: true,
-			timeLog: false,
-		});
-		path_to_remove = path.dirname(_bundle.out_file);
-		await wait(1000);
-		await _compile({
-			entry: _bundle.out_file,
-			outDir: outDir,
-			module: ts.ModuleKind.CommonJS,
-			format: "cjs",
-			declaration: false,
-			outFile: cjsOutFiles,
-			tsConfigPath: tsconfig_path,
-		});
-		await wait(1000);
-		await _compile({
-			entry: _bundle.out_file,
-			outDir: outDir,
-			module: ts.ModuleKind.ES2020,
-			format: "esm",
-			declaration: true,
-			dtsFile: dtsFiles,
-			outFile: esmOutFiles,
-			tsConfigPath: tsconfig_path,
-		});
-		await wait(1000);
-		if (key === "main") {
-			_exports["."] = {
-				types: `./${out_dir}/${dtsFiles.join("").trim()}`,
-				import: `./${out_dir}/${esmOutFiles.join("").trim()}`,
-				require: `./${out_dir}/${cjsOutFiles.join("").trim()}`,
-			};
-		} else {
-			_exports[key] = {
-				types: `./${out_dir}/${key.slice(2).trim()}/${dtsFiles
-					.join("")
-					.trim()}`,
-				import: `./${out_dir}/${key.slice(2).trim()}/${esmOutFiles
-					.join("")
-					.trim()}`,
-				require: `./${out_dir}/${key.slice(2).trim()}/${cjsOutFiles
-					.join("")
-					.trim()}`,
-			};
-		}
-	} // loop end
-	await writePackageJson(_exports);
-	await wait(500);
-	await forceRemoveDir(path_to_remove);
-	console.timeEnd(green("Compile time"));
+    console.info(green("Start compiling to publish npm package."));
+    console.time(green("Compile time"));
+
+    const root = process.cwd();
+    const config = await getConfig();
+
+    if (!config.npm || !config.npm.exports?.main) {
+        console.error(
+            italic(
+                magenta(
+                    "To compile npm module, `config.npm` and `config.npm.exports.main` are required",
+                ),
+            ),
+        );
+        process.exit(1);
+    }
+
+    const exportsObj = config.npm.exports;
+    let out_dir = config.npm.outDir?.replace(/^\.\//, "").trim() || "dist";
+    let tsconfig_path = config.npm.tsconfig
+        ? path.join(root, config.npm.tsconfig)
+        : undefined;
+
+    const temp_dir = "._nyein";
+    const _exports: _Exports = {};
+
+    // Pre-clean output dirs
+    await Promise.all(
+        Object.keys(exportsObj).map(async key => {
+            const outDir =
+                key === "main"
+                    ? path.join(root, out_dir)
+                    : path.join(root, out_dir, key);
+            if (existsSync(outDir)) {
+                await cleanDir(outDir);
+            }
+        }),
+    );
+
+    for (const key of Object.keys(exportsObj)) {
+        const dtsFiles: string[] = [];
+        const cjsOutFiles: string[] = [];
+        const esmOutFiles: string[] = [];
+        const _entry = exportsObj[key as any];
+        const outDir =
+            key === "main"
+                ? path.join(root, out_dir)
+                : path.join(root, out_dir, key);
+
+        const _bundle = await bundle({
+            entry: _entry,
+            outDir: temp_dir,
+            check: true,
+            exit: true,
+            write: true,
+            timeLog: false,
+        });
+        const path_to_remove = path.dirname(_bundle.out_file);
+
+        await Promise.all([
+            _compile({
+                entry: _bundle.out_file,
+                outDir,
+                module: ts.ModuleKind.CommonJS,
+                format: "cjs",
+                declaration: false,
+                outFile: cjsOutFiles,
+                tsConfigPath: tsconfig_path,
+            }),
+            _compile({
+                entry: _bundle.out_file,
+                outDir,
+                module: ts.ModuleKind.ES2020,
+                format: "esm",
+                declaration: true,
+                dtsFile: dtsFiles,
+                outFile: esmOutFiles,
+                tsConfigPath: tsconfig_path,
+            }),
+        ]);
+
+        const typesPath =
+            key === "main"
+                ? `./${out_dir}/${dtsFiles.join("").trim()}`
+                : `./${out_dir}/${key.slice(2).trim()}/${dtsFiles.join("").trim()}`;
+        const importPath =
+            key === "main"
+                ? `./${out_dir}/${esmOutFiles.join("").trim()}`
+                : `./${out_dir}/${key.slice(2).trim()}/${esmOutFiles.join("").trim()}`;
+        const requirePath =
+            key === "main"
+                ? `./${out_dir}/${cjsOutFiles.join("").trim()}`
+                : `./${out_dir}/${key.slice(2).trim()}/${cjsOutFiles.join("").trim()}`;
+
+        _exports[key === "main" ? "." : key] = {
+            types: typesPath,
+            import: importPath,
+            require: requirePath,
+        };
+
+        await forceRemoveDir(path_to_remove);
+    }
+
+    await writePackageJson(_exports);
+    console.timeEnd(green("Compile time"));
 }
 
 export default compileNPM;

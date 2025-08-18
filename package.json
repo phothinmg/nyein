@@ -5,8 +5,7 @@
 		"build": "tsx build.ts",
 		"format": "biome format --write src",
 		"lint": "biome check --write src",
-		"check": "biome check src",
-		"prepare": "husky"
+		"check": "biome check src"
 	},
 	"bin": {
 		"nyein": "./dist/nyein.js"
@@ -37,17 +36,11 @@
 		"@types/madge": "^5.0.3",
 		"@types/node": "^24.3.0",
 		"husky": "^9.1.7",
-		"lint-staged": "^16.1.5",
 		"typescript": "^5.9.2"
 	},
 	"publishConfig": {
 		"provenance": true,
 		"access": "public"
-	},
-	"lint-staged": {
-		"*": [
-			"biome check --write src"
-		]
 	},
 	"repository": {
 		"url": "git+https://github.com/phothinmg/nyein.git",

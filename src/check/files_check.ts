@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { italic, magenta, yellow } from "@lwe8/tcolor";
-import { wait } from "../opt/helpers.js";
+
 
 // only support esm
 const js_exts = [".js", ".mjs"];
@@ -30,31 +30,33 @@ function checkExtGroup(exts: string[]): "js" | "ts" | "both" | "none" {
 const checkFileExtension = async (
 	dag: string[],
 ): Promise<"js" | "ts" | "both"> => {
-	const validExts = js_exts.concat(ts_exts);
+	const validExts = new Set([...js_exts, ...ts_exts]);
 	const vExts: string[] = [];
-	const un_validExt: string[] = [];
-	for await (const file of dag) {
+	const un_validExt: Set<string> = new Set();
+
+	for (const file of dag) {
 		const ext = path.extname(file);
-		if (validExts.includes(ext)) {
+		if (validExts.has(ext)) {
 			vExts.push(ext);
 		} else {
-			un_validExt.push(ext);
+			un_validExt.add(ext);
 		}
 	}
-	await wait(1000);
-	if (un_validExt.length) {
+
+	if (un_validExt.size) {
 		console.error(
 			magenta(
 				`Unsupported file extensions ${italic(
-					yellow(un_validExt.join(" ")),
+					yellow([...un_validExt].join(" ")),
 				)} found in dependencies tree.`,
 			),
 		);
 		process.exit(1);
 	}
+
 	const group_type = checkExtGroup(vExts);
 	if (group_type === "none") {
-		console.error(italic(magenta("Bundle error , bug for fix")));
+		console.error(italic(magenta("Bundle error, bug to fix")));
 		process.exit(1);
 	}
 	return group_type;

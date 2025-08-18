@@ -12,7 +12,7 @@
 - [Install](#install)
 - [Use](#use)
   - [CLI](#cli)
-  - [Bundle](#1-bundle-typescript-files-to-a-single-file)
+  - [Bundle typescript files to a single file](#1-bundle-typescript-files-to-a-single-file)
   - [Generate bundled dts file](#2-generate-bundled-dts-file)
   - [Build typescript package](#3-build-typescript-package-and-handle-dual-output-both-esmcommonjs)
 - [Javascript API](#javascript-api)
@@ -142,7 +142,7 @@ This tool manage `exports` field in your `package.json` like that:
 }
 ```
 
-## Javascript API
+### Javascript API
 
 **_Coming Soon_**
 
