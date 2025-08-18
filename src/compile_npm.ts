@@ -9,15 +9,15 @@ import getConfig from "./config.js";
 import { cleanDir, forceRemoveDir, wait } from "./opt/helpers.js";
 
 export interface NpmCompileOptions {
-  entry: string;
-  outDir: string;
-  module: ts.ModuleKind;
-  format: "esm" | "cjs";
-  declaration: boolean;
+	entry: string;
+	outDir: string;
+	module: ts.ModuleKind;
+	format: "esm" | "cjs";
+	declaration: boolean;
 
-  outFile: string[];
-  dtsFile?: string[];
-  tsConfigPath?: string;
+	outFile: string[];
+	dtsFile?: string[];
+	tsConfigPath?: string;
 }
 
 const packageJsonFile = path.join(process.cwd(), "package.json");
@@ -30,15 +30,15 @@ const packageJsonFile = path.join(process.cwd(), "package.json");
  * The package data is the parsed content of the package.json file.
  */
 async function getPackageData() {
-  const packageDataString = await fs.readFile(packageJsonFile, "utf8");
-  const packageData = JSON.parse(packageDataString);
-  const moduleType: "commonjs" | "module" = packageData.type
-    ? packageData.type
-    : "commonjs";
-  return {
-    moduleType,
-    packageData,
-  };
+	const packageDataString = await fs.readFile(packageJsonFile, "utf8");
+	const packageData = JSON.parse(packageDataString);
+	const moduleType: "commonjs" | "module" = packageData.type
+		? packageData.type
+		: "commonjs";
+	return {
+		moduleType,
+		packageData,
+	};
 }
 
 /**
@@ -49,28 +49,28 @@ async function getPackageData() {
  * @return {Promise<string>} The file name with the extension replaced based on the format.
  */
 async function replaceExt(
-  fileName: string,
-  format: "esm" | "cjs"
+	fileName: string,
+	format: "esm" | "cjs",
 ): Promise<string> {
-  let baseName = path.basename(fileName);
-  const dirName = path.dirname(fileName);
-  const { moduleType } = await getPackageData();
-  switch (format) {
-    case "esm":
-      baseName =
-        moduleType === "commonjs"
-          ? baseName.replace(/.ts/, ".mts").replace(/.js/, ".mjs")
-          : baseName;
+	let baseName = path.basename(fileName);
+	const dirName = path.dirname(fileName);
+	const { moduleType } = await getPackageData();
+	switch (format) {
+		case "esm":
+			baseName =
+				moduleType === "commonjs"
+					? baseName.replace(/.ts/, ".mts").replace(/.js/, ".mjs")
+					: baseName;
 
-      break;
-    case "cjs":
-      baseName =
-        moduleType === "module"
-          ? baseName.replace(/.ts/, ".cts").replace(/.js/, ".cjs")
-          : baseName;
-      break;
-  }
-  return path.join(dirName, baseName);
+			break;
+		case "cjs":
+			baseName =
+				moduleType === "module"
+					? baseName.replace(/.ts/, ".cts").replace(/.js/, ".cjs")
+					: baseName;
+			break;
+	}
+	return path.join(dirName, baseName);
 }
 
 /**
@@ -87,61 +87,61 @@ async function replaceExt(
  * @return {Promise<void>} A promise that resolves when the compiling is complete.
  */
 async function _compile({
-  entry,
-  outDir,
-  module,
-  format,
-  dtsFile,
-  outFile,
-  declaration,
-  tsConfigPath = undefined,
+	entry,
+	outDir,
+	module,
+	format,
+	dtsFile,
+	outFile,
+	declaration,
+	tsConfigPath = undefined,
 }: NpmCompileOptions): Promise<void> {
-  const _compilerOptions = checks
-    .getCompilerOptions()
-    .forNpmCompile(outDir, module, declaration, tsConfigPath);
-  if (!_compilerOptions) {
-    throw new Error("Error");
-  }
-  const files = [entry];
-  const createdFiles: Record<string, string> = {};
-  const host = ts.createCompilerHost(_compilerOptions);
-  host.writeFile = (fileName, contents) => {
-    createdFiles[fileName] = contents;
-  };
-  var program = ts.createProgram(files, _compilerOptions, host);
-  program.emit();
-  Object.entries(createdFiles).map(async ([outName, content]) => {
-    outName = await replaceExt(outName, format);
-    if (existsSync(outName)) {
-      await fs.unlink(outName);
-    }
-    const dir = path.dirname(outName);
-    if (!existsSync(dir)) {
-      await fs.mkdir(dir, { recursive: true });
-    }
+	const _compilerOptions = checks
+		.getCompilerOptions()
+		.forNpmCompile(outDir, module, declaration, tsConfigPath);
+	if (!_compilerOptions) {
+		throw new Error("Error");
+	}
+	const files = [entry];
+	const createdFiles: Record<string, string> = {};
+	const host = ts.createCompilerHost(_compilerOptions);
+	host.writeFile = (fileName, contents) => {
+		createdFiles[fileName] = contents;
+	};
+	var program = ts.createProgram(files, _compilerOptions, host);
+	program.emit();
+	Object.entries(createdFiles).map(async ([outName, content]) => {
+		outName = await replaceExt(outName, format);
+		if (existsSync(outName)) {
+			await fs.unlink(outName);
+		}
+		const dir = path.dirname(outName);
+		if (!existsSync(dir)) {
+			await fs.mkdir(dir, { recursive: true });
+		}
 
-    const file_name = path.basename(outName);
-    if (
-      /.d.ts/g.test(file_name) ||
-      /.d.cts/g.test(file_name) ||
-      /.d.mts/g.test(file_name)
-    ) {
-      dtsFile?.push(file_name);
-    } else {
-      outFile.push(file_name);
-    }
-    await wait(500);
-    await fs.writeFile(outName, content);
-  });
+		const file_name = path.basename(outName);
+		if (
+			/.d.ts/g.test(file_name) ||
+			/.d.cts/g.test(file_name) ||
+			/.d.mts/g.test(file_name)
+		) {
+			dtsFile?.push(file_name);
+		} else {
+			outFile.push(file_name);
+		}
+		await wait(500);
+		await fs.writeFile(outName, content);
+	});
 }
 type _Exports = Record<
-  string,
-  {
-    types: string;
-    import: string;
-    require: string;
-    default?: string;
-  }
+	string,
+	{
+		types: string;
+		import: string;
+		require: string;
+		default?: string;
+	}
 >;
 /**
  * Writes the given exports object to the package.json file.
@@ -149,12 +149,12 @@ type _Exports = Record<
  * @returns A Promise that resolves when the file has been written.
  */
 async function writePackageJson(_exports: _Exports) {
-  const { packageData } = await getPackageData();
-  const { main, exports, ...rest } = packageData;
-  const __$main = main;
-  const __$exports = exports;
-  const data = { ...rest, exports: _exports };
-  await fs.writeFile(packageJsonFile, JSON.stringify(data, null, 2));
+	const { packageData } = await getPackageData();
+	const { main, exports, ...rest } = packageData;
+	const __$main = main;
+	const __$exports = exports;
+	const data = { ...rest, exports: _exports };
+	await fs.writeFile(packageJsonFile, JSON.stringify(data, null, 2));
 }
 
 /**
@@ -168,111 +168,111 @@ async function writePackageJson(_exports: _Exports) {
  * @return {Promise<void>} A Promise that resolves when the compilation is complete.
  */
 async function compileNPM(): Promise<void> {
-  console.info(green("Start compiling to publish npm package."));
-  console.time(green("Compile time"));
-  // nyein config
-  const root = process.cwd();
-  const config = await getConfig();
-  if (!config.npm) {
-    console.error(
-      italic(magenta("To compile npm module `config.npm` required"))
-    );
-    process.exit(1);
-  }
-  if (!config.npm?.exports.main) {
-    console.error(
-      italic(
-        magenta(
-          "To compile npm module `config.npm` and `config.npm.exports.main` required"
-        )
-      )
-    );
-    process.exit(1);
-  }
-  const exportsObj = config.npm.exports;
-  let out_dir = config.npm?.outDir ?? "dist";
-  if (out_dir.startsWith("./")) {
-    out_dir = out_dir.slice(2).trim();
-  }
-  let tsconfig_path = config.npm?.tsconfig ?? undefined;
-  if (tsconfig_path) {
-    tsconfig_path = path.join(root, tsconfig_path);
-  }
-  const exportKeys = Object.keys(exportsObj);
-  // bundle
-  const temp_dir = "._nyein";
-  let outDir = "";
-  let path_to_remove = "";
-  const _exports: _Exports = {};
-  for await (const key of exportKeys) {
-    const dtsFiles: string[] = [];
-    const cjsOutFiles: string[] = [];
-    const esmOutFiles: string[] = [];
-    const _entry = exportsObj[key as any];
-    if (key === "main") {
-      outDir = path.join(root, out_dir);
-    } else {
-      outDir = path.join(root, out_dir, key);
-    }
-    if (existsSync(outDir)) {
-      await cleanDir(outDir);
-      await wait(500);
-    }
-    const _bundle = await bundle({
-      entry: _entry,
-      outDir: temp_dir,
-      check: true,
-      exit: true,
-      write: true,
-      timeLog: false,
-    });
-    path_to_remove = path.dirname(_bundle.out_file);
-    await wait(1000);
-    await _compile({
-      entry: _bundle.out_file,
-      outDir: outDir,
-      module: ts.ModuleKind.CommonJS,
-      format: "cjs",
-      declaration: false,
-      outFile: cjsOutFiles,
-      tsConfigPath: tsconfig_path,
-    });
-    await wait(1000);
-    await _compile({
-      entry: _bundle.out_file,
-      outDir: outDir,
-      module: ts.ModuleKind.ES2020,
-      format: "esm",
-      declaration: true,
-      dtsFile: dtsFiles,
-      outFile: esmOutFiles,
-      tsConfigPath: tsconfig_path,
-    });
-     await wait(1000);
-    if (key === "main") {
-      _exports["."] = {
-        types: `./${out_dir}/${dtsFiles.join("").trim()}`,
-        import: `./${out_dir}/${esmOutFiles.join("").trim()}`,
-        require: `./${out_dir}/${cjsOutFiles.join("").trim()}`,
-      };
-    } else {
-      _exports[key] = {
-        types: `./${out_dir}/${key.slice(2).trim()}/${dtsFiles
-          .join("")
-          .trim()}`,
-        import: `./${out_dir}/${key.slice(2).trim()}/${esmOutFiles
-          .join("")
-          .trim()}`,
-        require: `./${out_dir}/${key.slice(2).trim()}/${cjsOutFiles
-          .join("")
-          .trim()}`,
-      };
-    }
-  } // loop end
-  await writePackageJson(_exports);
-  await wait(500);
-  await forceRemoveDir(path_to_remove);
-  console.timeEnd(green("Compile time"));
+	console.info(green("Start compiling to publish npm package."));
+	console.time(green("Compile time"));
+	// nyein config
+	const root = process.cwd();
+	const config = await getConfig();
+	if (!config.npm) {
+		console.error(
+			italic(magenta("To compile npm module `config.npm` required")),
+		);
+		process.exit(1);
+	}
+	if (!config.npm?.exports.main) {
+		console.error(
+			italic(
+				magenta(
+					"To compile npm module `config.npm` and `config.npm.exports.main` required",
+				),
+			),
+		);
+		process.exit(1);
+	}
+	const exportsObj = config.npm.exports;
+	let out_dir = config.npm?.outDir ?? "dist";
+	if (out_dir.startsWith("./")) {
+		out_dir = out_dir.slice(2).trim();
+	}
+	let tsconfig_path = config.npm?.tsconfig ?? undefined;
+	if (tsconfig_path) {
+		tsconfig_path = path.join(root, tsconfig_path);
+	}
+	const exportKeys = Object.keys(exportsObj);
+	// bundle
+	const temp_dir = "._nyein";
+	let outDir = "";
+	let path_to_remove = "";
+	const _exports: _Exports = {};
+	for await (const key of exportKeys) {
+		const dtsFiles: string[] = [];
+		const cjsOutFiles: string[] = [];
+		const esmOutFiles: string[] = [];
+		const _entry = exportsObj[key as any];
+		if (key === "main") {
+			outDir = path.join(root, out_dir);
+		} else {
+			outDir = path.join(root, out_dir, key);
+		}
+		if (existsSync(outDir)) {
+			await cleanDir(outDir);
+			await wait(500);
+		}
+		const _bundle = await bundle({
+			entry: _entry,
+			outDir: temp_dir,
+			check: true,
+			exit: true,
+			write: true,
+			timeLog: false,
+		});
+		path_to_remove = path.dirname(_bundle.out_file);
+		await wait(1000);
+		await _compile({
+			entry: _bundle.out_file,
+			outDir: outDir,
+			module: ts.ModuleKind.CommonJS,
+			format: "cjs",
+			declaration: false,
+			outFile: cjsOutFiles,
+			tsConfigPath: tsconfig_path,
+		});
+		await wait(1000);
+		await _compile({
+			entry: _bundle.out_file,
+			outDir: outDir,
+			module: ts.ModuleKind.ES2020,
+			format: "esm",
+			declaration: true,
+			dtsFile: dtsFiles,
+			outFile: esmOutFiles,
+			tsConfigPath: tsconfig_path,
+		});
+		await wait(1000);
+		if (key === "main") {
+			_exports["."] = {
+				types: `./${out_dir}/${dtsFiles.join("").trim()}`,
+				import: `./${out_dir}/${esmOutFiles.join("").trim()}`,
+				require: `./${out_dir}/${cjsOutFiles.join("").trim()}`,
+			};
+		} else {
+			_exports[key] = {
+				types: `./${out_dir}/${key.slice(2).trim()}/${dtsFiles
+					.join("")
+					.trim()}`,
+				import: `./${out_dir}/${key.slice(2).trim()}/${esmOutFiles
+					.join("")
+					.trim()}`,
+				require: `./${out_dir}/${key.slice(2).trim()}/${cjsOutFiles
+					.join("")
+					.trim()}`,
+			};
+		}
+	} // loop end
+	await writePackageJson(_exports);
+	await wait(500);
+	await forceRemoveDir(path_to_remove);
+	console.timeEnd(green("Compile time"));
 }
 
 export default compileNPM;
