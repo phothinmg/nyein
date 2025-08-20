@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import ts from "typescript";
-import bundle from "./bundle.js";
+import bundle from "./_bundle.js";
 import checks from "./check/index.js";
 import { forceRemoveDir } from "./opt/helpers.js";
 

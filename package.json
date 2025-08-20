@@ -5,8 +5,10 @@
     "build": "tsx build.ts",
     "format": "biome format --write src",
     "lint": "biome check --write src",
-    "check": "biome check src"
+    "check": "biome check src",
+    "test": "tsx --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=tests/lcov.info --test-update-snapshots"
   },
+  "types": "./dist/index.d.ts",
   "bin": {
     "nyein": "./dist/nyein.js"
   },

@@ -49,4 +49,3 @@ export default async function getConfig() {
 	}
 	return config;
 }
-//console.log(await getConfig());

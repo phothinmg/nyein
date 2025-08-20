@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"declaration": true,
-		"outDir": "lib",
+	"outDir": "dist",
 		"target": "es2020",
 		"module": "nodenext",
 		"moduleResolution": "nodenext",

@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { green, italic, magenta } from "@lwe8/tcolor";
 import ts from "typescript";
-import bundle from "./bundle.js";
+import bundle from "./_bundle.js";
 import checks from "./check/index.js";
 import getConfig from "./config.js";
 import { cleanDir, forceRemoveDir, wait } from "./opt/helpers.js";
