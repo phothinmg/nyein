@@ -29,7 +29,10 @@
   "description": "The utilities for create small size typescript node package and publish.",
   "dependencies": {
     "@lwe8/tcolor": "^1.0.3",
+    "@types/js-yaml": "^4.0.9",
     "commander": "^14.0.0",
+    "htmlparser2": "^10.0.0",
+    "js-yaml": "^4.1.0",
     "madge": "^8.0.0",
     "tsx": "^4.20.4"
   },

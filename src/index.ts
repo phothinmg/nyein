@@ -1,7 +1,4 @@
-import bundle, { type BundleOptions } from "./_bundle.js";
-import bundleDts, { type BundleDtsOptions } from "./bundle_dts.js";
-import compileNPM, { type NpmCompileOptions } from "./compile_npm.js";
-import type { NyeinConfig } from "./config.js";
+import bundle, { type BundleOptions } from "./bundle/index.js";
 
-export type { BundleDtsOptions, BundleOptions, NyeinConfig, NpmCompileOptions };
-export { bundle, bundleDts, compileNPM };
+export type { BundleOptions };
+export { bundle };

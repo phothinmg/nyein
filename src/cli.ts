@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { createRequire } from "node:module";
 import { Command } from "commander";
-import { bundle, bundleDts, compileNPM } from "./index.js";
+import { bundle, bundleDts, compileNPM } from "./_index.js";
 
 const require = createRequire(import.meta.url);
 const _package = require("../package.json");

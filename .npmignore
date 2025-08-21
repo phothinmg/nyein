@@ -12,3 +12,5 @@ nyein.config.ts
 package-lock.json
 tsconfig.json
 .deepseek
+examples
+.dev
