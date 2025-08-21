@@ -76,6 +76,7 @@ async function bundle({
   return {
     content,
     write,
+    out_file_path,
   };
 }
 

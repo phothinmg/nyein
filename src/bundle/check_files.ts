@@ -122,13 +122,13 @@ async function checkModuleFormatFromFile(filePath: string) {
   }
 }
 
-  /**
-   * Given an array of file paths, determines the module format of the files by
-   * calling `checkModuleFormatFromFile` on each file. If all files are ESM,
-   * returns "esm". If all files are CommonJS, returns "commonjs". If there is a
-   * mix of ESM and CommonJS files, returns "mixed". If there are files that are
-   * unknown, returns "unknown". If the input array is empty, returns undefined.
-   */
+/**
+ * Given an array of file paths, determines the module format of the files by
+ * calling `checkModuleFormatFromFile` on each file. If all files are ESM,
+ * returns "esm". If all files are CommonJS, returns "commonjs". If there is a
+ * mix of ESM and CommonJS files, returns "mixed". If there are files that are
+ * unknown, returns "unknown". If the input array is empty, returns undefined.
+ */
 async function checkModuleFormatFromFileArray(
   allFiles: string[]
 ): Promise<"esm" | "commonjs" | "unknown" | "mixed" | undefined> {
@@ -156,12 +156,12 @@ async function checkModuleFormatFromFileArray(
   }
 }
 
-  /**
-   * Check all files in the dependencies tree. It will check if all files has
-   * the same file extension and module type. If there is a mix of file
-   * extensions or module types, it will throw an error.
-   * @param allFiles - An array of file paths.
-   */
+/**
+ * Check all files in the dependencies tree. It will check if all files has
+ * the same file extension and module type. If there is a mix of file
+ * extensions or module types, it will throw an error.
+ * @param allFiles - An array of file paths.
+ */
 async function checkFiles(allFiles: string[]) {
   console.time("checked file's extensions and module types");
   const extGroup = checkExtGroup(allFiles);
@@ -192,20 +192,13 @@ async function checkFiles(allFiles: string[]) {
     process.exit(1);
   }
   //TODO Module Format: current version support only ESM format, try to support Mixed ESM and CommonJs in future versions.
-  if (moduleType === "mixed") {
+  if (moduleType === "mixed" || moduleType === "commonjs") {
     console.warn(
       magenta(
-        "Bundler detects both ESM and CommonJs formats(Mixed) in the dependencies tree, bundler currently support only ESM module format but will be supported in future versions."
+        "Bundler detects both ESM and CommonJs formats(Mixed) or CommonJs format  in the dependencies tree, bundler currently support only ESM module format but will be supported in future versions."
       )
     );
     process.exit(1);
-  }
-  if (moduleType === "commonjs") {
-    console.warn(
-      yellow(
-        "Bundler detects CommonJs format, which is currently experimental and untested."
-      )
-    );
   }
   console.timeEnd("checked file's extensions and module types");
 }

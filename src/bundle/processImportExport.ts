@@ -1,12 +1,13 @@
 import ts from "typescript";
 import fs from "node:fs/promises";
+import path from "node:path";
 import $fnCompilerOptions from "../compiler_options.js";
 
-/* 
-
-
-
-*/
+const $generateFileName = (entry: string) => {
+  const _name = path.basename(entry).split(".")[0];
+  const _fn = Buffer.from(_name).toString("hex");
+  return `$var${_fn}`;
+};
 
 interface ProcessImportExportOptions {
   code: string;
@@ -30,6 +31,7 @@ function processImportExport({
   customConfigPath = undefined,
   removeExports = true,
 }: ProcessImportExportOptions): ProcessImportExportResult {
+  const FILE_NAME = $generateFileName(filePath);
   // Create a TypeScript source file
   const sourceFileForRemoveImport = ts.createSourceFile(
     filePath,
@@ -73,7 +75,7 @@ function processImportExport({
                 node,
                 modifiers,
                 node.asteriskToken,
-                node.name ?? factory.createIdentifier("defaultExport"),
+                node.name ?? factory.createIdentifier(FILE_NAME),
                 node.typeParameters,
                 node.parameters,
                 node.type,
@@ -84,7 +86,7 @@ function processImportExport({
               return factory.updateClassDeclaration(
                 node,
                 modifiers,
-                node.name ?? factory.createIdentifier("defaultExport"),
+                node.name ?? factory.createIdentifier(FILE_NAME),
                 node.typeParameters,
                 node.heritageClauses,
                 node.members
@@ -143,7 +145,7 @@ function processImportExport({
             return factory.createFunctionDeclaration(
               undefined,
               undefined,
-              expr.name ?? factory.createIdentifier("defaultExport"),
+              expr.name ?? factory.createIdentifier(FILE_NAME),
               expr.typeParameters,
               expr.parameters,
               expr.type,
@@ -155,7 +157,7 @@ function processImportExport({
           if (ts.isClassExpression(expr)) {
             return factory.createClassDeclaration(
               undefined,
-              expr.name ?? factory.createIdentifier("defaultExport"),
+              expr.name ?? factory.createIdentifier(FILE_NAME),
               expr.typeParameters,
               expr.heritageClauses,
               expr.members
@@ -168,7 +170,7 @@ function processImportExport({
             factory.createVariableDeclarationList(
               [
                 factory.createVariableDeclaration(
-                  factory.createIdentifier("defaultExport"),
+                  factory.createIdentifier(FILE_NAME),
                   undefined,
                   undefined,
                   expr
@@ -200,7 +202,7 @@ function processImportExport({
               return factory.createFunctionDeclaration(
                 undefined,
                 undefined,
-                right.name ?? factory.createIdentifier("defaultExport"),
+                right.name ?? factory.createIdentifier(FILE_NAME),
                 right.typeParameters,
                 right.parameters,
                 right.type,
@@ -210,7 +212,7 @@ function processImportExport({
             if (ts.isClassExpression(right)) {
               return factory.createClassDeclaration(
                 undefined,
-                right.name ?? factory.createIdentifier("defaultExport"),
+                right.name ?? factory.createIdentifier(FILE_NAME),
                 right.typeParameters,
                 right.heritageClauses,
                 right.members
@@ -221,7 +223,7 @@ function processImportExport({
               factory.createVariableDeclarationList(
                 [
                   factory.createVariableDeclaration(
-                    factory.createIdentifier("defaultExport"),
+                    factory.createIdentifier(FILE_NAME),
                     undefined,
                     undefined,
                     right
