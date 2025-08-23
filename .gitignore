@@ -8,3 +8,5 @@ lib
 .deepseek
 examples
 .dev
+__
+build.txt

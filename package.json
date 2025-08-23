@@ -40,7 +40,6 @@
     "@biomejs/biome": "^2.2.0",
     "@types/madge": "^5.0.3",
     "@types/node": "^24.3.0",
-    "husky": "^9.1.7",
     "typescript": "^5.9.2"
   },
   "publishConfig": {

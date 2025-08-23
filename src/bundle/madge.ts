@@ -10,16 +10,16 @@ import madge from "madge";
  * @returns {string[]} - The nodes in topological order.
  */
 function topoSort(tree: Record<string, string[]>): string[] {
-  const visited = new Set();
-  const sorted: string[] = [];
-  function visit(node: string) {
-    if (visited.has(node)) return;
-    visited.add(node);
-    (tree[node] || []).forEach(visit);
-    sorted.push(node);
-  }
-  Object.keys(tree).forEach(visit);
-  return sorted; // reverse for correct order
+	const visited = new Set();
+	const sorted: string[] = [];
+	function visit(node: string) {
+		if (visited.has(node)) return;
+		visited.add(node);
+		(tree[node] || []).forEach(visit);
+		sorted.push(node);
+	}
+	Object.keys(tree).forEach(visit);
+	return sorted; // reverse for correct order
 }
 
 /**
@@ -35,26 +35,26 @@ function topoSort(tree: Record<string, string[]>): string[] {
  * @returns {Promise<{warn: madge.MadgeWarnings, circularGraph: madge.MadgeModuleDependencyGraph, daGraph: string[]}>}
  */
 async function getDependenciesInfo(entry: string): Promise<{
-  warn: madge.MadgeWarnings;
-  circularGraph: madge.MadgeModuleDependencyGraph;
-  daGraph: string[];
+	warn: madge.MadgeWarnings;
+	circularGraph: madge.MadgeModuleDependencyGraph;
+	daGraph: string[];
 }> {
-  console.time("processed dependencies from entry");
-  const root = process.cwd();
-  const dirName = path.dirname(entry);
-  const _madge = await madge(entry);
-  const _dag = _madge.obj();
-  const warn: madge.MadgeWarnings = _madge.warnings();
-  const circularGraph: madge.MadgeModuleDependencyGraph =
-    _madge.circularGraph();
-  const daGraph: string[] = topoSort(_dag).map((i) =>
-    path.join(root, dirName, i)
-  );
-  console.timeEnd("processed dependencies from entry");
-  return {
-    warn,
-    circularGraph,
-    daGraph,
-  };
+	console.time("processed dependencies from entry");
+	const root = process.cwd();
+	const dirName = path.dirname(entry);
+	const _madge = await madge(entry);
+	const _dag = _madge.obj();
+	const warn: madge.MadgeWarnings = _madge.warnings();
+	const circularGraph: madge.MadgeModuleDependencyGraph =
+		_madge.circularGraph();
+	const daGraph: string[] = topoSort(_dag).map((i) =>
+		path.join(root, dirName, i),
+	);
+	console.timeEnd("processed dependencies from entry");
+	return {
+		warn,
+		circularGraph,
+		daGraph,
+	};
 }
 export default getDependenciesInfo;
