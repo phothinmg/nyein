@@ -27,7 +27,18 @@ export function $removeEsmExports(
 		const FILE_NAME = $generateFileName(dep.filePath);
 		const transformer: ts.TransformerFactory<ts.SourceFile> = (context) => {
 			const { factory } = context;
-			function visitor(node: ts.Node): ts.Node | ts.Node[] {
+			/**
+			 * This function will be called for each node in the abstract syntax tree (AST) of the given source file.
+			 * It will return a new node or an array of nodes, which will be used to replace the original node in the AST.
+			 * If it returns `undefined`, the node will be removed from the AST.
+			 *
+			 * The goal of this function is to remove all export statements from the source file.
+			 * There are three cases to consider:
+			 * 1. A declaration (function, class, interface, type alias, enum, variable) with an "export" modifier.
+			 * 2. An export declaration (e.g. `export { foo };`).
+			 * 3. An export assignment (e.g. `export default Foo;`).
+			 */
+			function visitor(node: ts.Node): ts.Node | ts.Node[] | undefined {
 				// --- Case 1: Strip "export" modifiers ---
 				if (
 					ts.isFunctionDeclaration(node) ||
@@ -43,6 +54,9 @@ export function $removeEsmExports(
 							m.kind !== ts.SyntaxKind.DefaultKeyword,
 					);
 					if (modifiers?.length !== node.modifiers?.length) {
+						// If the node has an export modifier, remove it.
+						// If the node is a function, class, interface, type alias, enum or variable declaration,
+						// update the declaration by removing the export modifier.
 						if (ts.isFunctionDeclaration(node)) {
 							return factory.updateFunctionDeclaration(
 								node,
@@ -102,7 +116,10 @@ export function $removeEsmExports(
 					}
 				} // --- Case 1
 				// --- Case 2: Remove "export { foo }" entirely ---
-				if (ts.isExportDeclaration(node)) return factory.createEmptyStatement();
+				if (ts.isExportDeclaration(node)) {
+					// If the node is an export declaration, remove it.
+					return factory.createEmptyStatement();
+				}
 				// --- Case 3: Handle "export default ..." ---
 				if (ts.isExportAssignment(node)) {
 					const expr = node.expression;
@@ -111,6 +128,7 @@ export function $removeEsmExports(
 						return factory.createEmptyStatement();
 					} else {
 						//TODO handle nameless default export
+						// For now, just exit the process with an error code.
 						process.exit(1);
 					}
 				} // --- Case 3
