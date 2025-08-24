@@ -1,5 +1,6 @@
+// cSpell:ignore ပထမအဆင့်မှာ ဖယ်ရှားရမယ့် ,လုပ်,ဒုတိယအဆင့်မှာ ဖယ်ရှား
 import ts from "typescript";
-import type { DependenciesContents } from "./getDepsContents.js";
+import type { DependenciesContents } from "./get_deps_contents.js";
 
 export interface RemovedImportsContents extends DependenciesContents {
 	removedImportsContent: string;
@@ -37,6 +38,7 @@ export function $removeEsmImports(
 			} //--- Case 2
 			ts.forEachChild(node, collectNodes);
 		} // collectNodes
+		// sc
 		// ပထမအဆင့်မှာ ဖယ်ရှားရမယ့် nodes တွေကို collect လုပ်
 		collectNodes(sourceFile);
 		// ဒုတိယအဆင့်မှာ ဖယ်ရှား

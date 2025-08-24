@@ -1,11 +1,15 @@
 import fs from "node:fs/promises";
 
-async function $getLocalPackage() {
-	const _data = JSON.parse(await fs.readFile("package.json", "utf8"));
-	return {
-		version: _data.version,
-		license: _data.license,
-	};
+type VL = {
+  version: string;
+  license: string;
+};
+async function $getLocalPackage(): Promise<VL> {
+  const _data = JSON.parse(await fs.readFile("package.json", "utf8"));
+  return {
+    version: _data.version,
+    license: _data.license,
+  };
 }
 export const { version, license } = await $getLocalPackage();
 

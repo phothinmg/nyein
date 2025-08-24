@@ -66,8 +66,6 @@ npx nyein bundle path/to/entry.ts -o path/to/output/dir
 
 Optional options:
 
-- `--noCheck` : Skip types checking and duplicate declaration detection.
-
 - `-p` OR `--config` followed by the path/to/custom/tsconfig file: The package flavor custom tsconfig file, if not provided, it will look for `tsconfig.json` at the root of the project. `noEmit = true` and `strict = true` will overwrite for types checking and duplicate declaration detection.
 
 ### 2. Generate bundled dts file.
@@ -127,6 +125,9 @@ This tool manage `exports` field in your `package.json` like that:
 
 ```json
 {
+  "main":"./dist/index.cjs",
+  "types":  "./dist/index.d.ts",
+  "module": "./dist/index.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

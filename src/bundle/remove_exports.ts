@@ -1,6 +1,6 @@
 import path from "node:path";
 import ts from "typescript";
-import type { RemovedImportsContents } from "./removeImport.js";
+import type { RemovedImportsContents } from "./remove_Import.js";
 
 export interface RemovedImportsNExportsContents extends RemovedImportsContents {
 	removeExportsContent?: string;
@@ -128,6 +128,7 @@ export function $removeEsmExports(
 						return factory.createEmptyStatement();
 					} else {
 						//TODO handle nameless default export
+						console.warn("For now, just exit the process with an error code")
 						// For now, just exit the process with an error code.
 						process.exit(1);
 					}

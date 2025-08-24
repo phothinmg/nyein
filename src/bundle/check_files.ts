@@ -3,7 +3,7 @@
 import path from "node:path";
 import { magenta } from "@lwe8/tcolor";
 import ts from "typescript";
-import type { DependenciesContents } from "./getDepsContents.js";
+import type { DependenciesContents } from "./get_deps_contents.js";
 
 const jsesm_exts = [".js", ".mjs"];
 const jscjs_exts = [".cjs"];

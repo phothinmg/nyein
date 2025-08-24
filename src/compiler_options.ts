@@ -76,6 +76,19 @@ const $fnCompilerOptions = {
     }
     return co;
   },
+  type(customConfigPath?: string) {
+    const co = get_compiler_options({
+      customConfigPath,
+      defaultOptions: {
+        noEmit: true,
+        strict: true,
+      },
+    });
+    if (isPlainObject(co)) {
+      throw new Error($cpLog);
+    }
+    return co;
+  },
 };
 
 export default $fnCompilerOptions;

@@ -1,12 +1,10 @@
 import type ts from "typescript";
 import nyeinBannerText from "../banner_text.js";
-import { wait } from "../helpers.js";
-import checkDuplicate from "./check_duplicate.js";
 import checkFileExtensionAndFormat from "./check_files.js";
-import type { DependenciesContents } from "./getDepsContents.js";
-import { $removeEsmExports } from "./removeExports.js";
-import { $removeEsmImports } from "./removeImport.js";
-import mergeImports from "./mergeImports.js";
+import type { DependenciesContents } from "./get_deps_contents.js";
+import { $removeEsmExports } from "./remove_exports.js";
+import { $removeEsmImports } from "./remove_Import.js";
+import mergeImports from "./merge_Imports.js";
 
 export default async function merge(
   deps: DependenciesContents[],
@@ -18,8 +16,8 @@ export default async function merge(
   if (!checkFileAndModule) {
     process.exit(1);
   }
-  await checkDuplicate(deps, compilerOptions);
-  await wait(100);
+  //await checkDuplicate(deps, compilerOptions);
+  //await wait(100);
   const removedImports = $removeEsmImports(deps, compilerOptions);
   const removedExports = $removeEsmExports(removedImports, compilerOptions);
   let module_exports: string[] = [];

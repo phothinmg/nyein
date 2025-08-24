@@ -8,7 +8,7 @@ import {
   isPlainObject,
   wait,
 } from "../helpers.js";
-import { $getDependenciesConent } from "./getDepsContents.js";
+import { $getDependenciesContent } from "./get_deps_contents.js";
 import merge from "./merge.js";
 export interface BundleOptions {
   entry: string;
@@ -28,8 +28,9 @@ async function bundle({
   const out_dir = path.join(process.cwd(), outDir);
   const out_file_path = path.join(out_dir, out_file_name);
   const compilerOptions = $fnCompilerOptions.get(customConfigPath);
-  const { dependenciesConent, warn, circularGraph } =
-    await $getDependenciesConent(entry);
+  const check = !!compilerOptions?.noCheck;
+  const { dependenciesContent, warn, circularGraph } =
+    await $getDependenciesContent(entry, check, customConfigPath);
   if (!isPlainArray(warn.skipped)) {
     console.warn(`${italic(yellow(warn.skipped.join(" ")))}`);
   }
@@ -41,7 +42,11 @@ async function bundle({
     });
     console.warn(`${italic(yellow(strA.join("\n")))}`);
   }
-  const content = await merge(dependenciesConent, compilerOptions, allowBanner);
+  const content = await merge(
+    dependenciesContent,
+    compilerOptions,
+    allowBanner
+  );
   await wait(500);
   const write = async () => {
     await createOrCleanOutDir(out_dir);

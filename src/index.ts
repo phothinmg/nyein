@@ -3,5 +3,6 @@ import bundleDts, { type BundleDtsOptions } from "./bundle_dts.js";
 import compileNpm, { type NpmCompileOptions } from "./compile_npm.js";
 import { type NyeinConfig } from "./config.js";
 import { version } from "./banner_text.js";
+import rask from "./rask.js";
 export type { BundleOptions, BundleDtsOptions, NyeinConfig, NpmCompileOptions };
-export { bundle, bundleDts, version, compileNpm };
+export { bundle, bundleDts, version, compileNpm, rask };

@@ -7,8 +7,7 @@
     "moduleResolution": "nodenext",
     "noImplicitAny": true,
     "strict": true,
-    "allowJs": true,
-
+    "allowJs": true
   },
-  "include": ["src/**/*", "__/**/*"]
+  "include": ["src/**/*"]
 }
